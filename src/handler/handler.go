@@ -1,10 +1,11 @@
 package handler
 
 import (
-	"github.com/YAWAL/dmFsZXJpeXlhdm9yc2t5eWlkZWFzb2Z0/src/order"
 	"net/http"
 	"strconv"
 	"sync"
+
+	"github.com/YAWAL/dmFsZXJpeXlhdm9yc2t5eWlkZWFzb2Z0/src/order"
 )
 
 func Register(orderSlice *order.DynamicOrders, orderMap *sync.Map) {
@@ -33,17 +34,15 @@ func showOrders(orderMap *sync.Map) func(w http.ResponseWriter, r *http.Request)
 	return func(w http.ResponseWriter, r *http.Request) {
 		var orders []string
 		orderMap.Range(func(key, value interface{}) bool {
-			if value.(int) == 0 {
-				stringKey := key.(string)
-				stringValue := strconv.Itoa(value.(int))
-				orders = append(orders, stringKey+" - "+stringValue)
-			}
+			stringKey := key.(string)
+			stringValue := strconv.Itoa(value.(int))
+			orders = append(orders, stringKey+" - "+stringValue)
 			return true
 		})
 		var response string
 
-		for _, order := range orders {
-			response = response + order + "\n"
+		for _, item := range orders {
+			response = response + item + "\n"
 		}
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(response))
